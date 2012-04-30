@@ -40,24 +40,21 @@ class Game
     @board[selection] = @human
     
     draw_board
-
-    selection_string = selection.to_s
-    puts @board[selection]
     
     ## COMPUTER TURN 1 AND MARK COMPUTER TURN 1
-    if selection_string == @board[1] || @board[3] || @board[5] || @board[7]
+    if @human == @board[1] || @human == @board[3] || @human == @board[5] || @human == @board[7]
       # This is the wrong first move for them. Computer should win.
       puts "Bad decision. I will win."
       @board[4] = @computer
       puts "I select slot 4 for my #{@computer}."
       draw_board
-    elsif selection_string == @board[0] || @board[2] || @board[6] || @board[8]
+    elsif @human == @board[0] || @human == @board[2] || @human == @board[6] || @human == @board[8]
       puts "I'm impressed. You made a smart first move."
       @board[4] = @computer
       puts "I select slot 4 for my #{@computer}."
       draw_board
     else
-      puts "Alright, good move."
+      puts "Not working right."
       @board[0] = @computer
       puts "I select slot 0 for my #{@computer}."
       draw_board
