@@ -89,7 +89,7 @@ class Game
     
     def computer_turn
     	index_position = computer_find_move
-    	#Right now index_position is just the entire winning board
+    	#Right now computer_find_move is just the entire winning board
     	pp(index_position)
     	@board[index_position] = @computer
     	puts "Is this working?"
@@ -109,12 +109,15 @@ class Game
     ]
     
     def computer_find_move
-      @winning_board.each do |column|
-    	  if times_in_column(column, @computer) == 2
-    		  return empty_in_column(column)
+      @winning_board.each do |winning_trio|
+    	  if times_in_column(winning_trio, @computer) == 2
+    		  return empty_in_column(winning_trio)
     	  end
       end
     end
+    
+    #winning_trio is a trio of slots that give you a win
+    #the two parameters passed to times_in_column are the trio of slots that give you a win and the computer's symbol (X or O)
   
   def empty_in_column(array)
   	array.each do |one_slot|
@@ -127,18 +130,22 @@ class Game
   end
   
   def times_in_column(win_combo, item)
-    #win_combo is one whole block, a winning combination
-  	times_found = 0
+    #win_combo is a trio of slots that give you a win, we iterate through that array, there are three elements in the array
+    #item is the computer's symbol (X or O)
+  	times_symbol_found = 0
   	win_combo.each do |one_slot|
-  	  one_slot = one_slot.to_i
-  	  #one_slot is one slot in a winning combination block of 3 slots
-  		times_found += 1 if @board[one_slot] == item
-  		#increase times by 1 if that one item in the winning block is equal to the computer's symbol
-  		if @board[one_slot] == @human
+  	  #one_slot is one slot within a trio of slots that give a win
+  		if one_slot == item
+  		  times_symbol_found += 1 
+  		end
+  		#the number of times the computer's symbol is found is increased by 1 each time that there's a match between a slot and the computer's symbol
+  		if one_slot == @human
   		  return 0
   		end
+  		if time_symbol_found == 2
+  		  time_symbol_found
+  		end
   	end
-  	times_found
   end
   
   computer_turn
