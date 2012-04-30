@@ -1,3 +1,5 @@
+require 'pp'
+
 class Game
 
   def draw_board
@@ -17,6 +19,7 @@ class Game
   end
 
   def initialize
+    
     @board = ["0", "1", "2", "3", "4", "5", "6", "7", "8"]
     
     draw_board
@@ -54,7 +57,7 @@ class Game
       puts "I select slot 4 for my #{@computer}."
       draw_board
     else
-      puts "Not working right."
+      puts "I'm impressed. You made a smart first move. THIRD OPTION"
       @board[0] = @computer
       puts "I select slot 0 for my #{@computer}."
       draw_board
@@ -68,8 +71,79 @@ class Game
     @board[selection] = @human
     draw_board
     puts "You selected slot #{selection}. Now it's my turn."
-  end
+  
+    ## NOW FIGURE OUT THE BEST COMPUTER TURN 2.
+    ## For now hard code these next few things in.
+    ## BEGIN.
+    
+    @board[8] = @computer
+    puts "I picked slot 8."
+    draw_board
+    
+    puts "You pick slot 6."
+    @board[6] = @human
+    draw_board
+    puts "Now it's my turn again."
+    
+    ## END.
+    
+    def computer_turn
+    	index_position = computer_find_move
+    	#Right now index_position is just the entire winning board
+    	pp(index_position)
+    	@board[index_position] = @computer
+    	puts "Is this working?"
+    end
+    
+    @winning_board = [
+    	[@board[0], @board[1], @board[2]],
+    	[@board[3], @board[4], @board[5]],
+    	[@board[6], @board[7], @board[8]],
 
+    	[@board[0], @board[3], @board[6]],
+    	[@board[1], @board[4], @board[7]],
+    	[@board[2], @board[5], @board[8]],
+
+    	[@board[0], @board[4], @board[8]],
+    	[@board[2], @board[4], @board[6]]
+    ]
+    
+    def computer_find_move
+      @winning_board.each do |column|
+    	  if times_in_column(column, @computer) == 2
+    		  return empty_in_column(column)
+    	  end
+      end
+    end
+  
+  def empty_in_column(array)
+  	array.each do |one_slot|
+  	  #one_slot is one slot in a winning combination block of 3 slots
+  		unless @board[one_slot] == @human || @board[one_slot] == @computer
+  		  #unless the spot is taken by the computer or human, return it
+  			return one_slot
+  		end
+  	end
+  end
+  
+  def times_in_column(win_combo, item)
+    #win_combo is one whole block, a winning combination
+  	times_found = 0
+  	win_combo.each do |one_slot|
+  	  one_slot = one_slot.to_i
+  	  #one_slot is one slot in a winning combination block of 3 slots
+  		times_found += 1 if @board[one_slot] == item
+  		#increase times by 1 if that one item in the winning block is equal to the computer's symbol
+  		if @board[one_slot] == @human
+  		  return 0
+  		end
+  	end
+  	times_found
+  end
+  
+  computer_turn
+  
+end
 end
 
 Game.new
